@@ -3,6 +3,7 @@ package com.sispet.sispetv6.controllers;
 import com.sispet.sispetv6.DTO.ProdutoDTO;
 import com.sispet.sispetv6.entidades.Produto;
 import com.sispet.sispetv6.repositorios.ProdutoRepositorio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class ProdutoController {
     }
 
     @PostMapping("/produtos")
-    public Produto criarProduto(@RequestBody ProdutoDTO produtoDTO){
+    public Produto criarProduto(@RequestBody @Valid ProdutoDTO produtoDTO){
         Produto produtoNovo = new Produto();
 
         produtoNovo.setDescricao(produtoDTO.getDescricao());

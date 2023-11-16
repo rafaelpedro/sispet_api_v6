@@ -3,6 +3,7 @@ package com.sispet.sispetv6.controllers;
 import com.sispet.sispetv6.DTO.AnimalDTO;
 import com.sispet.sispetv6.entidades.Animal;
 import com.sispet.sispetv6.repositorios.AnimalRepositorio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class AnimalController {
         }
 
         @PostMapping("/animals")
-        public Animal criarAnimal(@RequestBody AnimalDTO animalDTO){
+        public Animal criarAnimal(@RequestBody @Valid AnimalDTO animalDTO){
             Animal animalNovo = new Animal();
 
             animalNovo.setNome(animalDTO.getNome());

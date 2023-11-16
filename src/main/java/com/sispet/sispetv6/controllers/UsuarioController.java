@@ -3,10 +3,15 @@ package com.sispet.sispetv6.controllers;
 import com.sispet.sispetv6.DTO.UsuarioDTO;
 import com.sispet.sispetv6.entidades.Usuario;
 import com.sispet.sispetv6.repositorios.UsuarioRepositorio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -21,7 +26,7 @@ public class UsuarioController {
     }
 
     @PostMapping("/usuarios")
-    public Usuario criarUsuario(@RequestBody UsuarioDTO usuarioDTO){
+    public Usuario criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
         Usuario usuarioNovo = new Usuario();
 
         usuarioNovo.setNome(usuarioDTO.getNome());
@@ -46,5 +51,18 @@ public class UsuarioController {
     @DeleteMapping("/usuarios/{id}")
     public void deletarUsuario(@PathVariable long id){
         usuarioRepositorio.deleteById(id);
+    }
+
+    @ResponseStatus
+    @ExceptionHandler
+    public Map<String, String> validarExcecao(MethodArgumentNotValidException ex){
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) ->{
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }

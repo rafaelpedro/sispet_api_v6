@@ -6,6 +6,7 @@ import com.sispet.sispetv6.entidades.AgendaPetshop;
 import com.sispet.sispetv6.entidades.AgendaVeterinario;
 import com.sispet.sispetv6.repositorios.AgendaPetshopRepositorio;
 import com.sispet.sispetv6.repositorios.AgendaVeterinarioRepositorio;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class AgendaPetshopController {
     }
 
     @PostMapping("/agenda-pet")
-    public AgendaPetshop criarAgendaPet(@RequestBody AgendaPetshopDTO agendaPetshopDTO){
+    public AgendaPetshop criarAgendaPet(@RequestBody @Valid AgendaPetshopDTO agendaPetshopDTO){
         AgendaPetshop agendaPetNovo = new AgendaPetshop();
 
         agendaPetNovo.setHorarioEntrada(agendaPetshopDTO.getHorarioEntrada());
