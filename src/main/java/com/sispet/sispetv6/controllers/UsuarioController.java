@@ -5,6 +5,7 @@ import com.sispet.sispetv6.entidades.Usuario;
 import com.sispet.sispetv6.repositorios.UsuarioRepositorio;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,14 @@ public class UsuarioController {
 
     @Autowired
     UsuarioRepositorio usuarioRepositorio;
-
+    @Autowired
+    private PasswordEncoder codificadorDeSenhas;
     @GetMapping("/usuarios")
     public List<Usuario> listarUsuarios(){
         return usuarioRepositorio.findAll();
     }
+
+    //Alterar o findAll para passar sem a senha
 
     @PostMapping("/usuarios")
     public Usuario criarUsuario(@RequestBody @Valid UsuarioDTO usuarioDTO){
@@ -31,19 +35,19 @@ public class UsuarioController {
 
         usuarioNovo.setNome(usuarioDTO.getNome());
         usuarioNovo.setLogin(usuarioDTO.getLogin());
-        usuarioNovo.setSenha(usuarioDTO.getSenha());
+        usuarioNovo.setSenha(codificadorDeSenhas.encode(usuarioDTO.getSenha()));
 
         return usuarioRepositorio.save(usuarioNovo);
     }
 
     @PutMapping("/usuarios/{id}")
-    public Usuario editarUsuario(@PathVariable long id, @RequestBody UsuarioDTO usuarioDTO){
+    public Usuario editarUsuario(@PathVariable long id, @RequestBody @Valid UsuarioDTO usuarioDTO){
 
         Optional<Usuario> usuarioEncontrado = usuarioRepositorio.findById(id);
 
         usuarioEncontrado.get().setNome(usuarioDTO.getNome());
         usuarioEncontrado.get().setLogin(usuarioDTO.getLogin());
-        usuarioEncontrado.get().setSenha(usuarioDTO.getSenha());
+        usuarioEncontrado.get().setSenha(codificadorDeSenhas.encode(usuarioDTO.getSenha()));
 
         return usuarioRepositorio.save(usuarioEncontrado.get());
     }
